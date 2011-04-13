@@ -18,15 +18,18 @@ class sfDependencyInjectionContainerPluginConfiguration extends sfPluginConfigur
    * @see sfPluginConfiguration
    *
    * Initialize the service container
-   * connect the listenToMethodNotFound() method to the following events:
-   *  - configuration.method_not_found
-   *  - controller.method_not_found
+   * - connect the listenToMethodNotFound() method to *.method_not_found events to extend those area with getService[Container] methods
    */
   public function initialize()
   {
     $this->initializeServiceContainer();
     $this->dispatcher->connect('configuration.method_not_found', array($this, 'listenToMethodNotFound'));
+    $this->dispatcher->connect('context.method_not_found', array($this, 'listenToMethodNotFound'));
     $this->dispatcher->connect('component.method_not_found', array($this, 'listenToMethodNotFound'));
+    $this->dispatcher->connect('form.method_not_found', array($this, 'listenToMethodNotFound'));
+    $this->dispatcher->connect('response.method_not_found', array($this, 'listenToMethodNotFound'));
+    $this->dispatcher->connect('user.method_not_found', array($this, 'listenToMethodNotFound'));
+    $this->dispatcher->connect('view.method_not_found', array($this, 'listenToMethodNotFound'));
   }
 
   /**
