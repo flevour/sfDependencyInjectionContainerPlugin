@@ -107,5 +107,6 @@ class sfDependencyInjectionContainerPluginConfiguration extends sfPluginConfigur
       }
     }
     $this->serviceContainer = $sc;
+    $this->dispatcher->notify(new sfEvent($this->serviceContainer, 'service_container.post_initialize'));
   }
 }
