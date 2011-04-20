@@ -90,13 +90,7 @@ class sfDependencyInjectionContainerPluginConfiguration extends sfPluginConfigur
     }
     else
     {
-      // build the service container dynamically
-      $sc = new sfServiceContainerBuilder();
-      $loader = new sfServiceContainerLoaderFileYaml($sc);
-
-      // Single services_ENV.yml should import a common services.yml if they need to do so.
-      $loader->load(sfConfig::get('sf_config_dir') . "/di/services_$environment.yml");
-
+      $sc = self::createServiceContainer($environment);
       $this->dispatcher->notify(new sfEvent($this->serviceContainer, 'service_container.load_configuration'));
 
       if (!$debug)
@@ -108,5 +102,17 @@ class sfDependencyInjectionContainerPluginConfiguration extends sfPluginConfigur
     }
     $this->serviceContainer = $sc;
     $this->dispatcher->notify(new sfEvent($this->serviceContainer, 'service_container.post_initialize'));
+  }
+
+
+  public static function createServiceContainer($environment)
+  {
+    // build the service container dynamically
+    $sc = new sfServiceContainerBuilder();
+    $loader = new sfServiceContainerLoaderFileYaml($sc);
+
+    // Single services_ENV.yml should import a common services.yml if they need to do so.
+    $loader->load(sfConfig::get('sf_config_dir') . "/di/services_$environment.yml");
+    return $sc;
   }
 }
